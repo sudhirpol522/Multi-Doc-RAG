@@ -29,6 +29,7 @@ main_archive/
 # Secrets & configs
 .env
 .env.*
+k8s/secret.yaml
 
 # Logs
 logs/

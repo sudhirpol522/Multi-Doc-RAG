@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-doc-chat
+  labels:
+    app: multi-doc-chat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multi-doc-chat
+  template:
+    metadata:
+      labels:
+        app: multi-doc-chat
+    spec:
+      containers:
+      - name: multi-doc-chat
+        image: sudhirpol/multi-doc-chat:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: GOOGLE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: multi-doc-chat-secrets
+              key: google-api-key
+        - name: GROQ_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: multi-doc-chat-secrets
+              key: groq-api-key
+        - name: LANGSMITH_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: multi-doc-chat-secrets
+              key: langsmith-api-key
+        - name: LLM_PROVIDER
+          valueFrom:
+            configMapKeyRef:
+              name: multi-doc-chat-config
+              key: llm-provider
+        - name: ENV
+          value: "local"
+        - name: PORT
+          value: "8080"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5

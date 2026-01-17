@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: multi-doc-chat
+  namespace: argocd
+  annotations:
+    # ArgoCD Image Updater configuration
+    argocd-image-updater.argoproj.io/image-list: multi-doc-chat=sudhirpol/multi-doc-chat
+    argocd-image-updater.argoproj.io/multi-doc-chat.update-strategy: latest
+    argocd-image-updater.argoproj.io/multi-doc-chat.allow-tags: regexp:^(latest|main-.*)$
+    argocd-image-updater.argoproj.io/write-back-method: git
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/sudhirpol522/Multi-Doc-RAG.git
+    targetRevision: main
+    path: k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

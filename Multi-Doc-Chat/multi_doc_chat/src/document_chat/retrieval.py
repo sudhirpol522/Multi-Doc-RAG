@@ -142,6 +142,8 @@ class ConversationalRAG:
                 answer_preview=str(answer)[:150],
             )
             return answer
+        except DocumentPortalException:
+            raise
         except Exception as e:
             log.error("Failed to invoke ConversationalRAG", error=str(e))
             raise DocumentPortalException("Invocation error in ConversationalRAG", sys)
