@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: multi-doc-chat
-        image: sudhirpol/multi-doc-chat:latest
+        image: sudhirpol/multi-doc-chat:1.0.0
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

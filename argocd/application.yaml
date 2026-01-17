@@ -6,9 +6,10 @@ metadata:
   annotations:
     # ArgoCD Image Updater configuration
     argocd-image-updater.argoproj.io/image-list: multi-doc-chat=sudhirpol/multi-doc-chat
-    argocd-image-updater.argoproj.io/multi-doc-chat.update-strategy: latest
-    argocd-image-updater.argoproj.io/multi-doc-chat.allow-tags: regexp:^(latest|main-.*)$
+    argocd-image-updater.argoproj.io/multi-doc-chat.update-strategy: semver
+    argocd-image-updater.argoproj.io/multi-doc-chat.allow-tags: regexp:^1\..*$
     argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/git-branch: main
 spec:
   project: default
   source:
