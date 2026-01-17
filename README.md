@@ -217,13 +217,14 @@ Runs on every push and pull request to main branch:
 - Ensures code quality before deployment
 
 ### Continuous Deployment
+<img width="1918" height="931" alt="image" src="https://github.com/user-attachments/assets/769f715b-5a4c-4281-bc8c-99fc30b22a06" />
+
 
 Triggers automatically after successful CI on main branch:
 - Auto-increments semantic version (1.0.0 → 1.0.1 → 1.0.2)
 - Builds Docker image with version tag
 - Pushes to Docker Hub (sudhirpol/multi-doc-chat:1.x.x)
 - Creates Git tag for version tracking
-- ArgoCD Image Updater detects new version
 - Automatically updates Kubernetes manifests
 - Deploys to Minikube cluster with rolling updates
 
@@ -245,7 +246,6 @@ For local development and testing, the application can be deployed to Minikube w
 Key features:
 - GitOps workflow with ArgoCD
 - Semantic versioning (1.x.x pattern)
-- Automatic image updates via ArgoCD Image Updater
 - Health checks and resource limits
 - ConfigMaps for configuration
 - Secrets management for API keys
