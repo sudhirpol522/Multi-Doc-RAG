@@ -1,0 +1,48 @@
+{
+    "family": "multi-doc-chat",
+    "networkMode": "awsvpc",
+    "executionRoleArn": "arn:aws:iam::306570692493:role/ecsTaskExecutionRole",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "1024",
+    "memory": "8192",
+    "containerDefinitions": [
+      {
+        "name": "multi-doc-chat-container",
+        "image": "306570692493.dkr.ecr.us-east-1.amazonaws.com/multi-doc-chat-repo",
+        "cpu": 1024,
+        "essential": true,
+        "portMappings": [
+          {
+            "containerPort": 8080,
+            "hostPort": 8080,
+            "protocol": "tcp",
+            "name": "multi-doc-chat-container-8080-tcp",
+            "appProtocol": "http"
+          }
+        ],
+        "environment": [
+          {
+            "name": "ENV",
+            "value": "production"
+          }
+        ],
+        "secrets": [
+          {
+            "name": "apikeyliveclass",
+            "valueFrom": "arn:aws:secretsmanager:us-east-1:306570692493:secret:multi-doc-chat-apikey-EykEZf"
+          }
+  
+        ],
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-group": "/ecs/multi-doc-chat",
+            "awslogs-region": "us-east-1",
+            "awslogs-stream-prefix": "ecs",
+            "awslogs-create-group": "true"
+          }
+        }
+      }
+    ]
+  }
+  
