@@ -1,4 +1,6 @@
 # MultiDocChat
+<img width="1917" height="873" alt="image" src="https://github.com/user-attachments/assets/a2b2a09f-00e4-4446-85a3-ca1fad838406" />
+
 
 A production-ready multi-document RAG system built with FastAPI and LangChain. Upload multiple documents (PDF, DOCX, TXT), ask questions, and get accurate answers using retrieval-augmented generation with conversational context awareness.
 
@@ -9,18 +11,27 @@ Multi-document ingestion with intelligent text chunking and vector embeddings us
 ## Technology Stack
 
 Backend: FastAPI, LangChain with LCEL, Python 3.12
+
 Vector Database: FAISS
+
 Embeddings: Google Generative AI text-embedding-004
+
 LLMs: Google Gemini 2.0 Flash, Groq
+
 Testing: Pytest with unit and integration tests
+
 Evaluation: LangSmith with custom LLM judges
+
 DevOps: Docker, GitHub Actions, AWS ECS Fargate
 
 ## Prerequisites
 
 Python 3.12 or higher
+
 Google API Key for embeddings and LLM
+
 Groq API Key for alternative LLM provider
+
 LangSmith API Key for evaluations (optional)
 
 ## Installation
@@ -213,6 +224,8 @@ The system uses a session-based architecture where each document upload creates 
 config.yaml controls embedding models, retrieval settings including search type and MMR parameters, and LLM configurations for multiple providers with temperature and token limits.
 
 ## Logging and Monitoring
+<img width="1918" height="872" alt="image" src="https://github.com/user-attachments/assets/524587db-4f69-4d17-b5c8-4c95a3c4e5ee" />
+
 
 The application uses structured logging with contextual information including session IDs, operation timings, and error details. Logs are output in JSON format for easy parsing and monitoring.
 
