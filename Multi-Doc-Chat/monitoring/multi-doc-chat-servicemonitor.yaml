@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ServiceMonitor
+metadata:
+  name: multi-doc-chat-monitor
+  namespace: default
+  labels:
+    app: multi-doc-chat
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: multi-doc-chat
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
