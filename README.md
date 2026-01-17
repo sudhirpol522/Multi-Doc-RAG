@@ -223,9 +223,7 @@ The system uses a session-based architecture where each document upload creates 
 
 config.yaml controls embedding models, retrieval settings including search type and MMR parameters, and LLM configurations for multiple providers with temperature and token limits.
 
-## Logging and Monitoring
-<img width="1918" height="872" alt="image" src="https://github.com/user-attachments/assets/524587db-4f69-4d17-b5c8-4c95a3c4e5ee" />
-
+## Logging
 
 The application uses structured logging with contextual information including session IDs, operation timings, and error details. Logs are output in JSON format for easy parsing and monitoring.
 
