@@ -6,7 +6,7 @@ A production-ready multi-document RAG system built with FastAPI and LangChain. U
 
 ## Features
 
-Multi-document ingestion with intelligent text chunking and vector embeddings using FAISS for fast semantic search. Conversational RAG with chat history and MMR retrieval for diverse relevant results. LLM-as-a-Judge evaluation framework with custom correctness evaluators using Gemini 2.5 Pro. Comprehensive unit and integration tests with pytest. Automated CI/CD pipeline deploying to AWS ECS Fargate via GitHub Actions.
+Multi-document ingestion with intelligent text chunking and vector embeddings using FAISS for fast semantic search. Conversational RAG with chat history and MMR retrieval for diverse relevant results. LLM-as-a-Judge evaluation framework with custom correctness evaluators using Gemini 2.5 Pro. Comprehensive unit and integration tests with pytest. Automated CI/CD pipeline with semantic versioning deploying to Kubernetes via ArgoCD.
 
 ## Technology Stack
 
@@ -22,11 +22,13 @@ Testing: Pytest with unit and integration tests
 
 Evaluation: LangSmith with custom LLM judges
 
-DevOps: Docker, GitHub Actions, AWS ECS Fargate
+DevOps: Docker, GitHub Actions, Kubernetes, ArgoCD, Minikube
 
 ## Prerequisites
 
 Python 3.12 or higher
+
+UV package manager (recommended) - Install from https://github.com/astral-sh/uv
 
 Google API Key for embeddings and LLM
 
@@ -38,17 +40,26 @@ LangSmith API Key for evaluations (optional)
 
 Clone the repository and navigate to the project directory.
 
+### Option 1: Using UV (Recommended)
+
+```bash
+# Install uv if not already installed
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Sync dependencies (creates virtual environment automatically)
+uv sync
+
+# Run the application
+uv run uvicorn main:app --reload
+```
+
+### Option 2: Using pip
+
 Create a virtual environment:
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate
-```
-
-On Windows use:
-
-```bash
-.venv\Scripts\activate
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
 
 Install dependencies:
@@ -91,6 +102,10 @@ LANGSMITH_API_KEY - Required only for running evaluations. Get it from https://s
 Start the server:
 
 ```bash
+# With uv
+uv run uvicorn main:app --reload
+
+# Or with standard Python
 uvicorn main:app --reload
 ```
 
@@ -123,20 +138,24 @@ Session Management: Each upload creates a unique session with isolated document 
 Run all tests:
 
 ```bash
+# With uv
+uv run pytest
+
+# Or with standard Python
 pytest
 ```
 
 Run with coverage report:
 
 ```bash
-pytest --cov=multi_doc_chat
+uv run pytest --cov=multi_doc_chat
 ```
 
 Run specific test categories:
 
 ```bash
-pytest tests/unit
-pytest tests/integration
+uv run pytest tests/unit
+uv run pytest tests/integration
 ```
 
 The test suite includes unit tests for document ingestion, chunking, FAISS index management, and RAG retrieval logic. Integration tests cover API endpoints including upload, chat, error handling, and session validation.
@@ -187,13 +206,49 @@ docker run -p 8000:8080 --env-file .env multi-doc-chat
 
 ## CI/CD Pipeline
 
-The project includes automated CI/CD workflows using GitHub Actions.
+The project uses a modern GitOps workflow with semantic versioning.
 
-Continuous Integration: Runs on every push and pull request to main branch. Sets up Python 3.12 and UV package manager. Installs dependencies with locked versions. Executes pytest test suite with dummy API keys.
+### Continuous Integration
 
-Continuous Deployment: Triggers after successful CI on main branch. Builds Docker image and pushes to Amazon ECR. Deploys to AWS ECS Fargate with zero-downtime rolling updates. Uses OIDC for secure AWS authentication.
+Runs on every push and pull request to main branch:
+- Sets up Python 3.12 and UV package manager
+- Installs dependencies with locked versions (uv.lock)
+- Executes pytest test suite with dummy API keys
+- Ensures code quality before deployment
 
-Required GitHub secrets: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and API keys should be stored in AWS Secrets Manager.
+### Continuous Deployment
+
+Triggers automatically after successful CI on main branch:
+- Auto-increments semantic version (1.0.0 → 1.0.1 → 1.0.2)
+- Builds Docker image with version tag
+- Pushes to Docker Hub (sudhirpol/multi-doc-chat:1.x.x)
+- Creates Git tag for version tracking
+- ArgoCD Image Updater detects new version
+- Automatically updates Kubernetes manifests
+- Deploys to Minikube cluster with rolling updates
+
+### Required GitHub Secrets
+
+- `DOCKERHUB_USERNAME`: Docker Hub username
+- `DOCKERHUB_TOKEN`: Docker Hub access token
+
+### Kubernetes Deployment
+
+For local development and testing, the application can be deployed to Minikube with ArgoCD:
+
+```bash
+# See MINIKUBE_ARGOCD_SETUP.md for complete setup instructions
+# See VERSIONING.md for versioning strategy details
+# See QUICK_SETUP.md for quick reference commands
+```
+
+Key features:
+- GitOps workflow with ArgoCD
+- Semantic versioning (1.x.x pattern)
+- Automatic image updates via ArgoCD Image Updater
+- Health checks and resource limits
+- ConfigMaps for configuration
+- Secrets management for API keys
 
 ## Project Structure
 
@@ -211,6 +266,8 @@ tests/
   unit/ - Component-level tests
   integration/ - API endpoint tests
 .github/workflows/ - CI/CD pipeline definitions
+k8s/ - Kubernetes manifests (deployment, service, configmap, secrets)
+argocd/ - ArgoCD application configuration
 static/ - Frontend assets
 templates/ - HTML templates
 ```
